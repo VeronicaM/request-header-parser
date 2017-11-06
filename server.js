@@ -34,7 +34,11 @@ app.route('/')
     })
 app.route('/api/whoami')
     .get(function(req, res) {
-        res.send(req.ipaddress);
+        var result = new Object();
+        result.ipaddress = req.header('X-Forwarded-For').split(',')[0];
+        result.language = req.header("accept-language").split(',')[0];
+        result.software = req.header("user-agent").split('(')[1].split(')')[0];
+        res.send(result);
     })
     // Respond not found to all the wrong routes
 app.use(function(req, res, next) {
